@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +58,7 @@ public class DetailActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), data);
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(pos);
@@ -182,15 +182,19 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onStart() {
+            super.onStart();
+
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-            ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_image);
+            final ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_image);
 
-            Log.d("URL", url);
-            Log.d("POS", "" + pos);
-            Glide.with(getActivity()).load(url).into(imageView);
+            Glide.with(getActivity()).load(url).thumbnail(0.1f).into(imageView);
 
             return rootView;
         }
